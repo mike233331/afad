@@ -4,6 +4,9 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os.path
 from flask_bootstrap import Bootstrap5
+from sqlalchemy.orm import relationship, Session
+from sqlalchemy import ForeignKey
+
 
 
 # this variable, db, will be used for all SQLAlchemy commands
@@ -33,33 +36,48 @@ bootstrap = Bootstrap5(app)
 # and the table in the database is named: socks
 # db.Model is required - don't change it
 # identify all columns by name and their data type
-class Sock(db.Model):
-    __tablename__ = 'socks'
-    id = db.Column(db.Integer, primary_key=True)
+
+
+class Church(db.Model):
+    __tablename__ = "church"
+    id = db.Column(db.Integer, primary_key=True, index=True)
     name = db.Column(db.String)
-    style = db.Column(db.String)
-    color = db.Column(db.String)
-    quantity = db.Column(db.Integer)
-    price = db.Column(db.Float)
-    updated = db.Column(db.String)
+    city = db.Column(db.String)
+    color = db.Column(db.Integer)
+    # description = db.Column(db.String)
+    # country_id = db.Column(db.Integer, ForeignKey("country.id"))
+    # religion_id = db.Column(db.Integer, ForeignKey("religion.id"))
+    date_of_construction = db.Column(db.Integer)
+    # country = relationship("Country", back_populates="users")
+    # relig = relationship("religion", back_populates="user")
+
+# class Sock(db.Model):
+#     __tablename__ = 'socks'
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String)
+#     style = db.Column(db.String)
+#     color = db.Column(db.String)
+#     quantity = db.Column(db.Integer)
+#     price = db.Column(db.Float)
+#     updated = db.Column(db.String)
 
 #routes
 
 @app.route('/')
 def index():
     # get a list of unique values in the style column
-    styles = db.session.execute(db.select(Sock)
-        .with_only_columns(Sock.style).distinct())
-    return render_template('index.html', styles=styles)
+    cityes = db.session.execute(db.select(Church)
+        .with_only_columns(Church.city).distinct())
+    return render_template('index.html', cityes=cityes)
 
 
-@app.route('/inventory/<style>')
-def inventory(style):
+@app.route('/inventory/<city>')
+def inventory(city):
     try:
-        socks = db.session.execute(db.select(Sock)
-            .filter_by(style=style)
-            .order_by(Sock.name)).scalars()
-        return render_template('list.html', socks=socks, style=style)
+        church = db.session.execute(db.select(Church)
+            .filter_by(city=city)
+            .order_by(Church.name)).scalars()
+        return render_template('list.html', church=church, city=city)
     except Exception as e:
         # e holds description of the error
         error_text = "<p>The error:<br>" + str(e) + "</p>"

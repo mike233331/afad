@@ -2,7 +2,7 @@
 
 
 {% block title %}
-Sock Market
+Church Market
 {% endblock %}
 
 
@@ -12,15 +12,15 @@ Sock Market
   <div class="row">
     <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
-      <h1 class="pt-5 pb-2">Welcome to the Sock Market!</h1>
+      <h1 class="pt-5 pb-2">Welcome to the Church map!</h1>
 
       <p class="lead">This is the index page for an example Flask app using a SQL database containing an inventory of many colorful socks.</p>
 
-      <p>Select the style of sock you would like to see:</p>
+      <p>Select the sity:</p>
 
       <ul>
-          {% for s in styles %}
-          <li><a href="{{ url_for( 'inventory', style=s.style ) }}">{{ s.style }}</a></li>
+          {% for s in cityes %}
+          <li><a href="{{ url_for( 'inventory', city=s.city ) }}">{{ s.city }}</a></li>
           {% endfor %}
       </ul>
 
